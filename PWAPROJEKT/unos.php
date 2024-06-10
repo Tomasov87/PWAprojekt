@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unos vijesti</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .error {
+            color: red;
+            font-size: 0.9em;
+        }
+
+        .error-border {
+            border: 2px solid red;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            margin-right: 10px;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('form').on('submit', function (event) {
+                event.preventDefault();
+
+            
+                $('.error').text('');
+                $('input, select, textarea').removeClass('error-border');
+
+             
+                var title = $('#title').val();
+                var description = $('#description').val();
+                var category = $('#category').val();
+                var image = $('#image').val();
+
+                var valid = true;
+
+              
+                if (title === '') {
+                    $('#titleError').text('Naslov ne smije biti prazan');
+                    $('#title').addClass('error-border');
+                    valid = false;
+                } else if (title.length < 5 || title.length > 30) {
+                    $('#titleError').text('Naslov mora imati 5 do 30 znakova');
+                    $('#title').addClass('error-border');
+                    valid = false;
+                }
+
+             
+                if (description === '') {
+                    $('#descriptionError').text('Opis ne smije biti prazan');
+                    $('#description').addClass('error-border');
+                    valid = false;
+                } else if (description.length < 10 || description.length > 100) {
+                    $('#descriptionError').text('Opis mora imati 10 do 100 znakova');
+                    $('#description').addClass('error-border');
+                    valid = false;
+                }
+
+        
+                if (category === '') {
+                    $('#categoryError').text('Odaberite kategoriju!');
+                    $('#category').addClass('error-border');
+                    valid = false;
+                }
+
+       
+                if (image === '') {
+                    $('#imageError').text('Slika mora biti odabrana!');
+                    $('#image').addClass('error-border');
+                    valid = false;
+                }
+
+             
+                if (valid) {
+                    this.submit();
+                }
+            });
+
+           
+            $('#title, #description, #category, #image').on('blur', function () {
+                var value = $(this).val();
+                var id = $(this).attr('id');
+                var errorDivId = '#' + id + 'Error';
+
+      
+                $(errorDivId).text('');
+                $(this).removeClass('error-border');
+
+                switch (id) {
+                    case 'title':
+                        if (value === '') {
+                            $(errorDivId).text('Naslov ne smije biti prazan');
+                            $(this).addClass('error-border');
+                        } else if (value.length < 5 || value.length > 30) {
+                            $(errorDivId).text('Naslov mora imati 5 do 30 znakova');
+                            $(this).addClass('error-border');
+                        }
+                        break;
+                    case 'description':
+                        if (value === '') {
+                            $(errorDivId).text('Opis ne smije biti prazan');
+                            $(this).addClass('error-border');
+                        } else if (value.length < 10 || value.length > 100) {
+                            $(errorDivId).text('Opis mora imati 10 do 100 znakova');
+                            $(this).addClass('error-border');
+                        }
+                        break;
+                    case 'category':
+                        if (value === '') {
+                            $(errorDivId).text('Odaberite kategoriju!');
+                            $(this).addClass('error-border');
+                        }
+                        break;
+                    case 'image':
+                        if (value === '') {
+                            $(errorDivId).text('Slika mora biti odabrana!');
+                            $(this).addClass('error-border');
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <header>
+        <h1>Portal za vijesti</h1>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="index.php">Početna</a></li>
+            <li><a href="sport.php">Sport</a></li>
+            <li><a href="tehnologija.php">Tehnologija</a></li>
+            <li><a href="administrator.php">Administracija</a></li>
+        </ul>
+    </nav>
+    <main>
+        <section>
+            <h2>Unos nove vijesti</h2>
+            <form id="newsForm" action="skripta.php" method="post" enctype="multipart/form-data">
+                <label for="category">Kategorija:</label>
+                <select id="category" name="category" required>
+                    <option value="">Odaberite kategoriju</option>
+                    <option value="sport">Sport</option>
+                    <option value="tehnologija">Tehnologija</option>
+                </select>
+                <div id="categoryError" class="error"></div><br>
+
+                <label for="title">Naslov:</label>
+                <input type="text" id="title" name="title" required>
+                <div id="titleError" class="error"></div><br>
+
+                <label for="description">Opis:</label>
+                <textarea id="description" name="description" required></textarea>
+                <div id="descriptionError" class="error"></div><br>
+
+                <div class="checkbox-label">
+                    <input type="checkbox" id="save_to_db" name="save_to_db">
+                    <label for="save_to_db">Spremi u bazu</label>
+                </div><br>
+
+                <label for="image">Slika:</label>
+                <input type="file" id="image" name="image" required>
+                <div id="imageError" class="error"></div><br>
+
+                <input type="submit" value="Unesi vijest">
+            </form>
+        </section>
+    </main>
+</body>
+</html>
